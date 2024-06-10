@@ -7,7 +7,7 @@ use tracing::info_span;
 
 const SOURCE: &str = "https://github.com/CVEProject/cvelistV5.git";
 // const PATH: &str = "/home/jreimann/git/git2-repro/https%3A%2F%2Fgithub.com%2FCVEProject%2FcvelistV5";
-const PATH: &str = "cvelistV5";
+// const PATH: &str = "cvelistV5";
 
 fn main() -> anyhow::Result<()> {
     env_logger::init();
