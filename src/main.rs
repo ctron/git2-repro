@@ -14,6 +14,9 @@ fn main() -> anyhow::Result<()> {
 
     let mut args = std::env::args();
 
+    // drop binary name
+    let _ = args.next();
+
     let path = args.next().expect("requires path");
     let source = args.next().unwrap_or_else(|| SOURCE.into());
 
