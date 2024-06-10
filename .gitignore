@@ -3,3 +3,4 @@
 /cvelistV5
 /https%3A%2F%2Fgithub.com%2FCVEProject%2FcvelistV5
 *.tar.xz
+/out*
