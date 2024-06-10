@@ -17,12 +17,12 @@ fn main() -> anyhow::Result<()> {
     let path = args.next().expect("requires path");
     let source = args.next().unwrap_or_else(|| SOURCE.into());
 
-    let path = &PathBuf::from(PATH);
+    let path = &PathBuf::from(path);
     let continuation: Option<&str> = None;
 
-    log::debug!("Starting run for: {}", SOURCE);
+    log::debug!("Starting run for: {}", source);
 
-    log::info!("Cloning {} into {}", SOURCE, path.display());
+    log::info!("Cloning {} into {}", source, path.display());
 
     let mut cb = RemoteCallbacks::new();
     cb.transfer_progress(|progress| {
@@ -49,7 +49,7 @@ fn main() -> anyhow::Result<()> {
     // clone or open repository
 
     let result = info_span!("clone repository")
-        .in_scope(|| RepoBuilder::new().fetch_options(fo).clone(SOURCE, path));
+        .in_scope(|| RepoBuilder::new().fetch_options(fo).clone(&source, path));
 
     let repo = match result {
         Ok(repo) => repo,
@@ -124,6 +124,8 @@ fn main() -> anyhow::Result<()> {
             None
         }
     };
+
+    log::info!("Changes: {:?}", changes.map(|c| c.len()));
 
     /*
     // discover and process files
