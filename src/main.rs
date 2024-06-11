@@ -3,25 +3,40 @@ use git2::build::RepoBuilder;
 use git2::{ErrorClass, ErrorCode, FetchOptions, RemoteCallbacks, Repository, ResetType};
 use std::collections::HashSet;
 use std::path::PathBuf;
+use clap::Parser;
 use tracing::info_span;
 
 const SOURCE: &str = "https://github.com/CVEProject/cvelistV5.git";
 // const PATH: &str = "/home/jreimann/git/git2-repro/https%3A%2F%2Fgithub.com%2FCVEProject%2FcvelistV5";
 // const PATH: &str = "cvelistV5";
 
-fn main() -> anyhow::Result<()> {
+#[derive(Clone, Debug, clap::Parser)]
+struct Cli {
+    #[arg(short, long, default_value = SOURCE)]
+    source: String,
+    #[arg(short, long)]
+    path: PathBuf,
+    #[arg(short, long)]
+    continuation: Option<String>,
+}
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+
+    let cli = Cli::parse();
+
     env_logger::init();
 
-    let mut args = std::env::args();
+    tokio::task::spawn_blocking(|| {
+        let Cli {source, path, continuation} = cli;
+        run(path, source, continuation)
+    }).await??;
 
-    // drop binary name
-    let _ = args.next();
+    Ok(())
+}
 
-    let path = args.next().expect("requires path");
-    let source = args.next().unwrap_or_else(|| SOURCE.into());
 
-    let path = &PathBuf::from(path);
-    let continuation: Option<&str> = None;
+fn run (path: PathBuf, source: String, continuation: Option<String>) -> anyhow::Result<()> {
 
     log::debug!("Starting run for: {}", source);
 
@@ -49,10 +64,15 @@ fn main() -> anyhow::Result<()> {
     let mut fo = FetchOptions::new();
     fo.remote_callbacks(cb);
 
+    // make use of zlib
+    let out = zstd::encode_all(&b"Hello World"[..], 0)?;
+    let _ = zstd::decode_all(&*out)?;
+    // end
+
     // clone or open repository
 
     let result = info_span!("clone repository")
-        .in_scope(|| RepoBuilder::new().fetch_options(fo).clone(&source, path));
+        .in_scope(|| RepoBuilder::new().fetch_options(fo).clone(&source, &path));
 
     let repo = match result {
         Ok(repo) => repo,
