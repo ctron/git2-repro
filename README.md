@@ -1,5 +1,8 @@
 # git2 segfault reproducer
 
+**NOTE:** Cloning `https://github.com/CVEProject/cvelistV5.git` might take a while, but it seems to be required to
+trigger the issue.
+
 ## What typically works
 
 Run on `aarch64-unknown-linux-gnu`:
