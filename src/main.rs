@@ -1,9 +1,9 @@
 use anyhow::Error;
+use clap::Parser;
 use git2::build::RepoBuilder;
 use git2::{ErrorClass, ErrorCode, FetchOptions, RemoteCallbacks, Repository, ResetType};
 use std::collections::HashSet;
 use std::path::PathBuf;
-use clap::Parser;
 use tracing::info_span;
 
 const SOURCE: &str = "https://github.com/CVEProject/cvelistV5.git";
@@ -22,22 +22,24 @@ struct Cli {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-
     let cli = Cli::parse();
 
     env_logger::init();
 
     tokio::task::spawn_blocking(|| {
-        let Cli {source, path, continuation} = cli;
+        let Cli {
+            source,
+            path,
+            continuation,
+        } = cli;
         run(path, source, continuation)
-    }).await??;
+    })
+    .await??;
 
     Ok(())
 }
 
-
-fn run (path: PathBuf, source: String, continuation: Option<String>) -> anyhow::Result<()> {
-
+fn run(path: PathBuf, source: String, continuation: Option<String>) -> anyhow::Result<()> {
     log::debug!("Starting run for: {}", source);
 
     log::info!("Cloning {} into {}", source, path.display());
