@@ -19,3 +19,9 @@ Then (on an actual `aarch64` target):
 ```bash
 ./git2-repro --path cvelistV5
 ```
+
+## Things to notice
+
+* I tried with a few other repos, but it seems to only fail with `https://github.com/CVEProject/cvelistV5.git` (the
+  default).
+* Running on `aarch64-unknown-linux-gnu` works in general. But not when compiling with `cross`.
