@@ -24,7 +24,7 @@ struct Cli {
 }
 
 fn init_tracing() {
-    const RUST_LOG: &str = "info,actix_web_prom=error";
+    const RUST_LOG: &str = "info";
 
     let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| {
         eprintln!("RUST_LOG is unset, using default: '{RUST_LOG}'");
