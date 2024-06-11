@@ -5,6 +5,9 @@ use git2::{ErrorClass, ErrorCode, FetchOptions, RemoteCallbacks, Repository, Res
 use std::collections::HashSet;
 use std::path::PathBuf;
 use tracing::info_span;
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::util::SubscriberInitExt;
+use tracing_subscriber::EnvFilter;
 
 const SOURCE: &str = "https://github.com/CVEProject/cvelistV5.git";
 // const PATH: &str = "/home/jreimann/git/git2-repro/https%3A%2F%2Fgithub.com%2FCVEProject%2FcvelistV5";
@@ -20,11 +23,30 @@ struct Cli {
     continuation: Option<String>,
 }
 
+fn init_tracing() {
+    const RUST_LOG: &str = "info,actix_web_prom=error";
+
+    let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+        eprintln!("RUST_LOG is unset, using default: '{RUST_LOG}'");
+        EnvFilter::new(RUST_LOG)
+    });
+
+    tracing_subscriber::registry()
+        .with(filter)
+        .with(
+            tracing_subscriber::fmt::layer()
+                .with_ansi(true)
+                .with_level(true)
+                .compact(),
+        )
+        .init();
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let cli = Cli::parse();
+    init_tracing();
 
-    env_logger::init();
+    let cli = Cli::parse();
 
     tokio::task::spawn_blocking(|| {
         let Cli {
