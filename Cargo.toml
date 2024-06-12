@@ -17,4 +17,4 @@ libgit2-sys = { version = "*", features = ["vendored"] }
 # doesn't seem to work
 libz-sys = { version = "*", features = ["static"] }
 
-zstd = { version = "0.13.1", features = [] }
+#zstd = { version = "0.13.1", features = [] }

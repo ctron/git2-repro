@@ -89,8 +89,8 @@ fn run(path: PathBuf, source: String, continuation: Option<String>) -> anyhow::R
     fo.remote_callbacks(cb);
 
     // make use of zlib
-    let out = zstd::encode_all(&b"Hello World"[..], 0)?;
-    let _ = zstd::decode_all(&*out)?;
+    // let out = zstd::encode_all(&b"Hello World"[..], 0)?;
+    // let _ = zstd::decode_all(&*out)?;
     // end
 
     // clone or open repository
