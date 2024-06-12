@@ -95,3 +95,12 @@ Backtrace stopped: previous frame identical to this frame (corrupt stack?)
     * However, the apt sources in that image point to 16.04.
     * In fact, the latest "released" version is Ubuntu
       16.04: https://github.com/cross-rs/cross/blob/v0.2.5/docker/Dockerfile.aarch64-unknown-linux-gnu
+
+## Possible "fix"
+
+`Cross.toml`:
+
+```toml
+[target.aarch64-unknown-linux-gnu]
+image = "ghcr.io/cross-rs/aarch64-unknown-linux-gnu:edge"
+```
