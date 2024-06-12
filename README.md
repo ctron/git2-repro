@@ -36,6 +36,7 @@ Then (on an actual `aarch64` target) run the following twice:
       fish: “./git2-repro --path test2 --sou…” terminated by signal SIGABRT (Abort)
       ```
 * Running on `aarch64-unknown-linux-gnu` works in general. But not when compiling with `cross`.
+* Using `cross` without `--release` also seems to work.
 
 ## Faults
 
