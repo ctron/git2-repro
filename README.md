@@ -86,3 +86,12 @@ Program terminated with signal SIGABRT, Aborted.
 #5  0x0000aaaac99aef18 in git_signature_free ()
 Backtrace stopped: previous frame identical to this frame (corrupt stack?)
 ```
+
+## Investigation
+
+* Ubuntu version
+    * It looks like cross' container images are based on Ubuntu
+      20.04: https://github.com/cross-rs/cross/blob/main/docker/Dockerfile.aarch64-unknown-linux-gnu.
+    * However, the apt sources in that image point to 16.04.
+    * In fact, the latest "released" version is Ubuntu
+      16.04: https://github.com/cross-rs/cross/blob/v0.2.5/docker/Dockerfile.aarch64-unknown-linux-gnu
